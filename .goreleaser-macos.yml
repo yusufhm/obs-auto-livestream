@@ -27,7 +27,7 @@ archives:
       amd64: x86_64
 
 checksum:
-  name_template: 'checksums.txt'
+  name_template: 'checksums-macos.txt'
 
 snapshot:
   name_template: "{{ .Tag }}-next"
