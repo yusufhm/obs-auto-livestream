@@ -1,0 +1,53 @@
+before:
+  hooks:
+    - go mod download
+
+env:
+  - GO111MODULE=on
+
+builds:
+  -
+    id: server-linux
+    ldflags:
+      - -s -w
+    binary: server
+    env:
+      - CGO_ENABLED=1
+    goarch:
+      - amd64
+    goos:
+      - linux
+  -
+    id: server-mac
+    ldflags:
+      - -s -w
+    binary: server
+    env:
+      - CGO_ENABLED=1
+      - CC=o64-clang
+      - CXX=o64-clang++
+    goarch:
+      - amd64
+    goos:
+      - darwin
+
+archives:
+  - replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ .Tag }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
