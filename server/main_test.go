@@ -13,8 +13,8 @@ import (
 var a App
 
 func TestMain(m *testing.M) {
-	dbURL := "test.db"
-	a.Initialise(&dbURL)
+	appConfig.dbURL = "test.db"
+	a.Initialise()
 
 	ensureTableExists()
 	code := m.Run()

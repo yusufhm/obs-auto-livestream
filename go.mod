@@ -11,6 +11,7 @@ require (
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/mattn/go-sqlite3 v1.14.4 // indirect
 	github.com/stretchr/testify v1.4.0 // indirect
+	github.com/unrolled/secure v1.0.8
 	github.com/webview/webview v0.0.0-20200724072439-e0c01595b361
 	golang.org/x/sys v0.0.0-20201018230417-eeed37f84f13 // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect

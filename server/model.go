@@ -6,6 +6,23 @@ import (
 	"gorm.io/gorm"
 )
 
+// Event payload from Facebook.
+type fbPageEvent struct {
+	Entry []struct {
+		Changes []struct {
+			Field string `json:"field"`
+			Value struct {
+				ID     int64  `json:"id,string"`
+				Status string `json:"status"`
+			} `json:"value"`
+		} `json:"changes"`
+		ID   int64 `json:"id,string"`
+		Time int64 `json:"time"`
+	}
+	Object string `json:"object"`
+}
+
+// Event to be stored in the database.
 type pageEvent struct {
 	ID              uint      `gorm:"primaryKey" json:"id"`
 	CreatedAt       time.Time `json:"created_at"`

@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/unrolled/secure"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -17,22 +18,42 @@ type App struct {
 	DB     *gorm.DB
 }
 
+var appConfig = struct {
+	dbURL       string
+	serverURL   string
+	environment string
+	isDev       func(string) bool
+}{
+	environment: "development",
+	isDev: func(env string) bool {
+		return env == "development"
+	},
+}
+
 // Initialise sets up the DB and router.
-func (a *App) Initialise(dbURL *string) {
+func (a *App) Initialise() {
+	log.Printf("%+v\n", appConfig)
+	log.Printf("Using database '%v'", appConfig.dbURL)
+
 	var err error
-	a.DB, err = gorm.Open(sqlite.Open(*dbURL), &gorm.Config{})
+	a.DB, err = gorm.Open(sqlite.Open(appConfig.dbURL), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	secureMiddleware := secure.New(secure.Options{
+		FrameDeny:     true,
+		IsDevelopment: appConfig.isDev(appConfig.environment),
+	})
 	a.Router = mux.NewRouter()
-
+	a.Router.Use(secureMiddleware.Handler)
 	a.initialiseRoutes()
 }
 
 // Run calls the main server loop.
-func (a *App) Run(serverURL *string) {
-	log.Fatal(http.ListenAndServe(*serverURL, a.Router))
+func (a *App) Run() {
+	log.Printf("Starting server at 'http://%v'", appConfig.serverURL)
+	log.Fatal(http.ListenAndServe(appConfig.serverURL, a.Router))
 }
 
 func respondWithError(w http.ResponseWriter, code int, message string) {
