@@ -1,0 +1,37 @@
+before:
+  hooks:
+    - go mod download
+
+env:
+  - GO111MODULE=on
+
+builds:
+  -
+    id: server-linux
+    ldflags:
+      - -s -w
+    binary: server
+    env:
+      - CGO_ENABLED=1
+    goarch:
+      - amd64
+    goos:
+      - linux
+
+archives:
+  - replacements:
+      linux: Linux
+      amd64: x86_64
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ .Tag }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
