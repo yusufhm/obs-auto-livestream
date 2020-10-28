@@ -1,4 +1,6 @@
 SHELL=/bin/bash -o pipefail
+PACKAGE_NAME          := github.com/yusufhm/obs-auto-livestream
+GOLANG_CROSS_VERSION  ?= v1.15.3
 
 .bin/gui:
 	go build -o .bin/gui ./gui
